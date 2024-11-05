@@ -67,7 +67,7 @@ func RunCustomCommand(repoPath string, command string) (string, error) {
 	return outBuff.String(), nil
 }
 
-func ProcessReposWithProgress(repos *[]types.Repo, action func(repo types.Repo) (err error), limited bool) {
+func ProcessReposWithProgress(repos *[]types.Repo, action func(repo types.Repo) error, limited bool) {
 	var wg sync.WaitGroup
 	var semaphore chan struct{}
 

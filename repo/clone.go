@@ -39,12 +39,13 @@ func ParseRepoName(url string) (string, error) {
 func Clone(repo *types.Repo, destDir string, showProgress bool) error {
 	// Destination folder for each repo
 	repoPath := filepath.Join(destDir, repo.Name)
+	failedCloneMesssage := "Clone failed!"
 	sshKeyPath := "/Users/bedletskyi/.ssh/id_rsa"
 
 	publicKey, err := ssh.NewPublicKeysFromFile("git", sshKeyPath, "")
 	if err != nil {
-		errMessage := fmt.Sprintf("Could not load SSH keys: %s", err)
-		return errors.Errorf(logFormat, repo.Name, "Clone failed!", errMessage)
+		errMessage := fmt.Sprintf("Failed to load SSH keys: %s", err)
+		return errors.Errorf(logFormat, repo.Name, failedCloneMesssage, errMessage)
 	}
 
 	cloneOptions := &git.CloneOptions{
@@ -63,8 +64,8 @@ func Clone(repo *types.Repo, destDir string, showProgress bool) error {
 	clonedRepo, cloneErr := git.PlainClone(repoPath, false, cloneOptions)
 
 	if cloneErr != nil {
-		errMessage := fmt.Sprintf("Could not clone repo: %s", cloneErr)
-		return errors.Errorf(logFormat, repo.Name, "Clone failed!", errMessage)
+		errMessage := fmt.Sprintf("Failed to clone repo: %s", cloneErr)
+		return errors.Errorf(logFormat, repo.Name, failedCloneMesssage, errMessage)
 	}
 
 	if repo.Branch == "" {
@@ -72,7 +73,7 @@ func Clone(repo *types.Repo, destDir string, showProgress bool) error {
 		ref, err := clonedRepo.Reference(plumbing.HEAD, true)
 		if err != nil {
 			errMessage := fmt.Sprintf("Failed to get repository default branch: %s", err)
-			return errors.Errorf(logFormat, repo.Name, "Clone failed!", errMessage)
+			return errors.Errorf(logFormat, repo.Name, failedCloneMesssage, errMessage)
 		}
 
 		repo.Branch = ref.Name().Short()
@@ -85,8 +86,8 @@ func Clone(repo *types.Repo, destDir string, showProgress bool) error {
 
 	err = clonedRepo.Storer.SetReference(originHeadRef)
 	if err != nil {
-		errMessage := fmt.Sprintf("Could not create symbolic reference: %s", err)
-		return errors.Errorf(logFormat, repo.Name, "Clone failed!", errMessage)
+		errMessage := fmt.Sprintf("Failed to create symbolic reference: %s", err)
+		return errors.Errorf(logFormat, repo.Name, failedCloneMesssage, errMessage)
 	}
 
 	return nil

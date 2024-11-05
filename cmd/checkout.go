@@ -4,6 +4,7 @@ import (
 	"MultiGit/config"
 	"MultiGit/log"
 	"MultiGit/repo"
+	"MultiGit/utils"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var checkoutCmd = &cobra.Command{
 			return
 		}
 
-		repo.Checkout(mgitConfig.Repositories, mgitPath, branch)
+		repo.Checkout(utils.FilterRepos(mgitConfig.Repositories, skipRepos), mgitPath, branch)
 	},
 }
 

@@ -4,6 +4,7 @@ import (
 	"MultiGit/config"
 	"MultiGit/log"
 	"MultiGit/repo"
+	"MultiGit/utils"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,7 @@ var runCmd = &cobra.Command{
 			return
 		}
 
-		repo.Run(mgitConfig.Repositories, mgitPath, command)
+		repo.Run(utils.FilterRepos(mgitConfig.Repositories, skipRepos), mgitPath, command)
 	},
 }
 

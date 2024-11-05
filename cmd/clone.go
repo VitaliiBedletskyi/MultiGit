@@ -4,6 +4,7 @@ import (
 	"MultiGit/config"
 	"MultiGit/log"
 	"MultiGit/repo"
+	"MultiGit/utils"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +26,7 @@ var cloneCmd = &cobra.Command{
 			return
 		}
 
-		repo.CloneAll(mgitConfig.Repositories, mgitPath)
+		repo.CloneAll(utils.FilterRepos(mgitConfig.Repositories, skipRepos), mgitPath)
 	},
 }
 

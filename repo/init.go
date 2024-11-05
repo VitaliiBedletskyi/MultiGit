@@ -3,6 +3,7 @@ package repo
 import (
 	"MultiGit/commands"
 	"MultiGit/types"
+	"MultiGit/utils"
 	"errors"
 	"fmt"
 	"github.com/go-git/go-git/v5"
@@ -18,7 +19,7 @@ var systemFolders = map[string]bool{
 	".git":    true,
 }
 
-func InitExistingRepos(folderPath string) (*[]types.Repo, error) {
+func InitExistingRepos(folderPath string, skipRepos []string) (*[]types.Repo, error) {
 	var wg sync.WaitGroup
 
 	repos := make([]types.Repo, 0)
@@ -30,8 +31,10 @@ func InitExistingRepos(folderPath string) (*[]types.Repo, error) {
 		return nil, err
 	}
 
+	skipReposMap := utils.SliceToMap(skipRepos)
+
 	for _, file := range files {
-		if file.IsDir() && !systemFolders[file.Name()] {
+		if (file.IsDir() && !systemFolders[file.Name()]) || !skipReposMap[file.Name()] {
 			getGitRepoInfo(file.Name(), folderPath, &wg, doneChan, errChan)
 		}
 	}

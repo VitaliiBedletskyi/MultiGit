@@ -22,7 +22,7 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		repos, err := repo.InitExistingRepos(mgitInitPath)
+		repos, err := repo.InitExistingRepos(mgitInitPath, skipRepos)
 		if err != nil {
 			log.Error(fmt.Sprintf("Failed to read .mgit config: %s", err))
 			return

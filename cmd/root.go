@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+var (
+	skipRepos []string
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "mgit",
@@ -35,6 +39,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringP("path", "p", "", "Path to target folder where command should be ran")
+	rootCmd.PersistentFlags().StringSliceVarP(&skipRepos, "skip", "s", []string{}, "List of repositories that will be skipped for processing")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

@@ -2,7 +2,9 @@ package repo
 
 import (
 	"MultiGit/commands"
+	"MultiGit/log"
 	"MultiGit/types"
+	"MultiGit/utils"
 	"fmt"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -36,11 +38,19 @@ func ParseRepoName(url string) (string, error) {
 	}
 }
 
-func Clone(repo *types.Repo, destDir string, showProgress bool) error {
+func Clone(repo *types.Repo, destDir string, showProgress bool, sshKeyPath string) error {
 	// Destination folder for each repo
 	repoPath := filepath.Join(destDir, repo.Name)
 	failedCloneMesssage := "Clone failed!"
-	sshKeyPath := "/Users/bedletskyi/.ssh/id_rsa"
+
+	if sshKeyPath == "" {
+		defaultSSHKeyPath, err := utils.GetDefaultSSHKeyPath()
+		if err != nil {
+			errMessage := fmt.Sprintf("Failed to get default SSH key path: %s", err)
+			return errors.Errorf(logFormat, repo.Name, failedCloneMesssage, errMessage)
+		}
+		sshKeyPath = defaultSSHKeyPath
+	}
 
 	publicKey, err := ssh.NewPublicKeysFromFile("git", sshKeyPath, "")
 	if err != nil {
@@ -94,7 +104,12 @@ func Clone(repo *types.Repo, destDir string, showProgress bool) error {
 }
 
 func CloneAll(repos *[]types.Repo, destDir string) {
+	sshKeyPath, err := utils.GetDefaultSSHKeyPath()
+	if err != nil {
+		log.Error(fmt.Sprintf("Failed to get default SSH key path: %s", err))
+		return
+	}
 	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
-		return Clone(&repo, destDir, false)
+		return Clone(&repo, destDir, false, sshKeyPath)
 	}, false)
 }

@@ -2,7 +2,9 @@ package repo
 
 import (
 	"MultiGit/commands"
+	"MultiGit/log"
 	"MultiGit/types"
+	"MultiGit/utils"
 	"errors"
 	"fmt"
 	"github.com/go-git/go-git/v5"
@@ -12,10 +14,15 @@ import (
 )
 
 func Pull(repos *[]types.Repo, destDir string) {
+	sshKeyPath, err := utils.GetDefaultSSHKeyPath()
+	if err != nil {
+		log.Error(fmt.Sprintf("Failed to get default SSH key path: %s", err))
+		return
+	}
+
 	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
 
 		repoPath := filepath.Join(destDir, repo.Name)
-		sshKeyPath := "/Users/bedletskyi/.ssh/id_rsa"
 		failedMessage := "Pull failed!"
 
 		publicKey, err := ssh.NewPublicKeysFromFile("git", sshKeyPath, "")

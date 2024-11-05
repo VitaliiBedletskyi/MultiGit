@@ -41,7 +41,7 @@ var addCmd = &cobra.Command{
 			URL:    repoUrl,
 			Branch: "",
 		}
-		err = repo.Clone(&repository, mgitPath, true)
+		err = repo.Clone(&repository, mgitPath, true, "")
 		if err != nil {
 			log.Error(fmt.Sprintf("Failed to clone repository: %s", err))
 			return

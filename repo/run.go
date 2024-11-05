@@ -31,7 +31,7 @@ func Run(repos *[]types.Repo, destDir string, command string) {
 
 	isOptimizedCommand := isOptimizedNpmInstallCommand(command)
 
-	commands.ProcessReposWithProgress(repos, func(repo types.Repo) (err error) {
+	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
 
 		repoPath := filepath.Join(destDir, repo.Name)
 		failedMessage := "Command failed!"
@@ -40,7 +40,7 @@ func Run(repos *[]types.Repo, destDir string, command string) {
 			return nil
 		}
 
-		_, err = commands.RunCustomCommand(repoPath, command)
+		_, err := commands.RunCustomCommand(repoPath, command)
 		if err != nil {
 			errMessage := fmt.Sprintf("Failed to run command: %s", err)
 			return errorpkg.Errorf(logFormat, repo.Name, failedMessage, errMessage)

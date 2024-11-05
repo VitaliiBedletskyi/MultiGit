@@ -15,7 +15,7 @@ const logFormat = "%-25s %-20s %s"
 
 func Clone(repos *[]types.Repo, destDir string) {
 
-	commands.ProcessReposWithProgress(repos, func(repo types.Repo) (err error) {
+	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
 		// Destination folder for each repo
 		repoPath := filepath.Join(destDir, repo.Name)
 		branch := plumbing.NewBranchReferenceName(repo.Branch)

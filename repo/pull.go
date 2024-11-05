@@ -12,7 +12,7 @@ import (
 )
 
 func Pull(repos *[]types.Repo, destDir string) {
-	commands.ProcessReposWithProgress(repos, func(repo types.Repo) (err error) {
+	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
 
 		repoPath := filepath.Join(destDir, repo.Name)
 		sshKeyPath := "/Users/bedletskyi/.ssh/id_rsa"

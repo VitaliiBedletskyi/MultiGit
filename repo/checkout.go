@@ -12,7 +12,7 @@ import (
 )
 
 func Checkout(repos *[]types.Repo, destDir string, branch string) {
-	commands.ProcessReposWithProgress(repos, func(repo types.Repo) (err error) {
+	commands.ProcessReposWithProgress(repos, func(repo types.Repo) error {
 
 		if branch == "" {
 			branch = repo.Branch

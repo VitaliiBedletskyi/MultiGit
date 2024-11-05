@@ -19,10 +19,15 @@ var addCmd = &cobra.Command{
 
 		path, _ := cmd.Flags().GetString("path")
 		repoUrl := args[0]
-		repoName, err := repo.ParseRepoName(repoUrl)
-		if err != nil {
-			log.Error(fmt.Sprintf("Failed to parse repository name: %s", err))
-			return
+		repoName, _ := cmd.Flags().GetString("name")
+		if repoName == "" {
+			parsedRepoName, err := repo.ParseRepoName(repoUrl)
+			if err != nil {
+				log.Error(fmt.Sprintf("Failed to parse repository name: %s", err))
+				return
+			}
+
+			repoName = parsedRepoName
 		}
 
 		mgitPath, err := repo.GetPath(path)
@@ -65,5 +70,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	//checkoutCmd.Flags().StringP("path", "p", "", "Path to target folder where command should be ran")
+	addCmd.Flags().StringP("name", "n", "", "Name of target repository folder")
 }

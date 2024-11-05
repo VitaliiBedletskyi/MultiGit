@@ -25,7 +25,7 @@ var cloneCmd = &cobra.Command{
 			return
 		}
 
-		repo.Clone(mgitConfig.Repositories, mgitPath)
+		repo.CloneAll(mgitConfig.Repositories, mgitPath)
 	},
 }
 

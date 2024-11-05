@@ -33,3 +33,7 @@ func badge(label, bgColor string) string {
 func Error(err string) {
 	fmt.Println(badge("ERROR", bgBrightRed), err)
 }
+
+func Success(msg string) {
+	fmt.Println(badge("SUCCESS", bgBrightGreen), msg)
+}

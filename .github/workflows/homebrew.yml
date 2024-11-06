@@ -66,6 +66,9 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout MultiGit repository
+      - uses: actions/checkout@v4
+
       - name: Clone Homebrew Tap Repository
         uses: actions/checkout@v4
         with:
@@ -73,7 +76,6 @@ jobs:
           path: tap
 
       - name: Update Homebrew Formula
-        working-directory: tap
         run: |
           VERSION=$(git describe --tags --abbrev=0)
           SHA_AMD64=$(shasum -a 256 bin/mgit-darwin-amd64 | awk '{ print $1 }')
@@ -108,7 +110,6 @@ jobs:
           EOF
 
       - name: Commit and Push Formula
-        working-directory: tap
         run: |
           cd tap
           git config --local user.name "GitHub Actions"

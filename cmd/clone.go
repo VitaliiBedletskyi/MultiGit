@@ -11,7 +11,7 @@ import (
 
 var cloneCmd = &cobra.Command{
 	Use:   "clone",
-	Short: "Clone all initialized repositories according to .mgitrc config",
+	Short: "Clone all repositories listed in your .mgitrc file.",
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := cmd.Flags().GetString("path")
 		mgitPath, err := repo.GetPath(path)
@@ -33,13 +33,5 @@ var cloneCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(cloneCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	cloneCmd.Flags().BoolP("force", "f", false, "Force the repository to be cloned even if a target folder isn't empty. All data in a target folder will be lost.")
 }

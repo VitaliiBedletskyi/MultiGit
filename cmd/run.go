@@ -11,7 +11,7 @@ import (
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run specified command in all initialized repositories according to .mgitrc config",
+	Short: "Execute any custom command across all repositories, supporting batch execution of scripts or Git commands.",
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := cmd.Flags().GetString("path")
 
@@ -40,14 +40,4 @@ var runCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	//runCmd.Flags().BoolP("force", "f", false, "Force the repository to be cloned even if a target folder isn't empty. All data in a target folder will be lost.")
 }

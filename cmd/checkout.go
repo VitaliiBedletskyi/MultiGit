@@ -11,7 +11,7 @@ import (
 
 var checkoutCmd = &cobra.Command{
 	Use:   "checkout",
-	Short: "Checkout all initialized repositories according to .mgitrc config to the specified branch",
+	Short: "Switch all repositories to the specified branch. If no branch is specified, will branch from .mgitrc config.",
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := cmd.Flags().GetString("path")
 		branch := ""
@@ -37,14 +37,4 @@ var checkoutCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(checkoutCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	//initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	//checkoutCmd.Flags().StringP("path", "p", "", "Path to target folder where command should be ran")
 }

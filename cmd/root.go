@@ -12,16 +12,11 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "mgit",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Short: "MultiGit - Effortless Git Repositories Management Tool",
+	Long: `MultiGit is a simple CLI tool designed to streamline and automate batch processing of commands 
+across multiple Git repositories. Ideal for developers and teams managing multiple repositories, 
+MultiGit provides an intuitive way to handle various Git actions, saving you time and reducing repetitive tasks.`,
+	Version: "v0.0.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -34,14 +29,6 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
 	rootCmd.PersistentFlags().StringP("path", "p", "", "Path to target folder where command should be ran")
 	rootCmd.PersistentFlags().StringSliceVarP(&skipRepos, "skip", "s", []string{}, "List of repositories that will be skipped for processing")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

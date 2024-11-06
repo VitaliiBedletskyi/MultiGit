@@ -50,14 +50,17 @@ jobs:
         with:
           path: bin/
 
+      - name: List files
+        run: ls -lah bin/
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            /home/runner/work/MultiGit/MultiGit/bin/mgit-darwin-amd64
-            /home/runner/work/MultiGit/MultiGit/bin/mgit-linux-amd64
-            /home/runner/work/MultiGit/MultiGit/bin/mgit-darwin-arm64
-            /home/runner/work/MultiGit/MultiGit/bin/mgit-linux-arm64
+            bin/mgit-darwin-amd64
+            bin/mgit-linux-amd64
+            bin/mgit-darwin-arm64
+            bin/mgit-linux-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
@@ -73,6 +76,7 @@ jobs:
           path: tap
 
       - name: Update Homebrew Formula
+        working-directory: tap
         run: |
           VERSION=$(git describe --tags --abbrev=0)
           SHA_AMD64=$(shasum -a 256 bin/mgit-darwin-amd64 | awk '{ print $1 }')
@@ -107,6 +111,7 @@ jobs:
           EOF
 
       - name: Commit and Push Formula
+        working-directory: tap
         run: |
           cd tap
           git config --local user.name "GitHub Actions"

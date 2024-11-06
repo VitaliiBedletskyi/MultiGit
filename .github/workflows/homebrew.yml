@@ -54,10 +54,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            bin/mgit-darwin-amd64
-            bin/mgit-linux-amd64
-            bin/mgit-darwin-arm64
-            bin/mgit-linux-arm64
+            /home/runner/work/MultiGit/MultiGit/bin/mgit-darwin-amd64
+            /home/runner/work/MultiGit/MultiGit/bin/mgit-linux-amd64
+            /home/runner/work/MultiGit/MultiGit/bin/mgit-darwin-arm64
+            /home/runner/work/MultiGit/MultiGit/bin/mgit-linux-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 

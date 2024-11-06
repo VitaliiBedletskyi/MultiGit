@@ -110,10 +110,13 @@ jobs:
           EOF
 
       - name: Commit and Push Formula
+        env:
+          GH_PAT: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         run: |
           cd tap
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
           git add mgit.rb
           git commit -m "Update Homebrew formula for version $VERSION"
+          git push https://x-access-token:${GH_PAT}@github.com/VitaliiBedletskyi/homebrew-tap.git HEAD:main
           git push

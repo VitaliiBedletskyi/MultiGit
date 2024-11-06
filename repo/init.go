@@ -34,7 +34,7 @@ func InitExistingRepos(folderPath string, skipRepos []string) (*[]types.Repo, er
 	skipReposMap := utils.SliceToMap(skipRepos)
 
 	for _, file := range files {
-		if (file.IsDir() && !systemFolders[file.Name()]) || !skipReposMap[file.Name()] {
+		if file.IsDir() && !systemFolders[file.Name()] && !skipReposMap[file.Name()] {
 			getGitRepoInfo(file.Name(), folderPath, &wg, doneChan, errChan)
 		}
 	}

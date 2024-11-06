@@ -80,7 +80,7 @@ func ProcessReposWithProgress(repos *[]types.Repo, action func(repo types.Repo) 
 
 	// Initialize the progress bar
 	progressBar := progressbar.NewOptions(len(*repos),
-		progressbar.OptionSetDescription("Processing repositories..."),
+		progressbar.OptionSetDescription("Processing:"),
 		progressbar.OptionShowCount(),
 		progressbar.OptionSetElapsedTime(true),
 	)

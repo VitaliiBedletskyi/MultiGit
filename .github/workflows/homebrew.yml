@@ -118,4 +118,5 @@ jobs:
           git config --local user.email "actions@github.com"
           git add mgit.rb
           git commit -m "Update Homebrew formula for version $VERSION"
-          git push https://x-access-token:${GH_PAT}@github.com/VitaliiBedletskyi/homebrew-tap.git HEAD:main
+          git remote set-url origin https://${GH_PAT}@github.com/VitaliiBedletskyi/homebrew-tap.git
+          git push origin main

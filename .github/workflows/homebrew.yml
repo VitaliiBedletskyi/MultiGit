@@ -1,0 +1,116 @@
+name: Build and Publish to Homebrew
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Release Binaries
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        goarch: [amd64, arm64]
+        goos: [darwin, linux]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+
+      - name: Build binary
+        env:
+          GOARCH: ${{ matrix.goarch }}
+          GOOS: ${{ matrix.goos }}
+        run: |
+          mkdir -p bin
+          go build -o bin/mgit-${{ matrix.goos }}-${{ matrix.goarch }} .
+
+      - name: Upload binaries
+        if: ${{ matrix.goos == 'darwin' }} || ${{ matrix.goos == 'linux' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mgit-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: bin/mgit-${{ matrix.goos }}-${{ matrix.goarch }}
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: bin/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bin/mgit-darwin-amd64
+            bin/mgit-linux-amd64
+            bin/mgit-darwin-arm64
+            bin/mgit-linux-arm64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-homebrew:
+    name: Update Homebrew Tap
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Homebrew Tap Repository
+        uses: actions/checkout@v4
+        with:
+          repository: VitaliiBedletskyi/homebrew-tap
+          path: tap
+
+      - name: Update Homebrew Formula
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          SHA_AMD64=$(shasum -a 256 bin/mgit-darwin-amd64 | awk '{ print $1 }')
+          SHA_ARM64=$(shasum -a 256 bin/mgit-darwin-arm64 | awk '{ print $1 }')
+          cat > tap/mgit.rb <<EOF
+          class MultiGit < Formula
+            desc "MultiGit - Effortless Git Repositories Management Tool"
+            homepage "https://github.com/username/mgit"
+            url "https://github.com/VitaliiBedletskyi/MultiGit/releases/download/\#{VERSION}/mgit-darwin-arm64"
+            version "\#{VERSION}"
+            sha256 "\#{SHA_AMD64}"
+
+            on_macos do
+              if Hardware::CPU.intel?
+                url "https://github.com/VitaliiBedletskyi/MultiGit/releases/download/\#{VERSION}/mgit-darwin-amd64"
+                sha256 "\#{SHA_AMD64}"
+              end
+
+              if Hardware::CPU.arm?
+                url "https://github.com/VitaliiBedletskyi/MultiGit/releases/download/\#{VERSION}/mgit-darwin-arm64"
+                sha256 "\#{SHA_ARM64}"
+              end
+            end
+
+            def install
+              if Hardware::CPU.intel?
+                bin.install "mgit-darwin-amd64" => "mgit"
+              elsif Hardware::CPU.arm?
+                bin.install "mgit-darwin-arm64" => "mgit"
+            end
+          end
+          EOF
+
+      - name: Commit and Push Formula
+        run: |
+          cd tap
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add mgit.rb
+          git commit -m "Update Homebrew formula for version $VERSION"
+          git push

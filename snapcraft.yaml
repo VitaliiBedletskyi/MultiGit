@@ -1,0 +1,27 @@
+name: MultiGit
+base: core22
+version: '0.0.1'
+summary: MultiGit - Effortless Git Repositories Management Tool
+description: |
+  MultiGit is a simple CLI tool designed to streamline and automate 
+  batch processing of commands across multiple Git repositories. 
+  Ideal for developers and teams managing multiple repositories, 
+  MultiGit provides an intuitive way to handle various Git actions, 
+  saving you time and reducing repetitive tasks.
+
+confinement: strict
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+
+apps:
+  mgit:
+    command: mgit
+
+parts:
+  mgit:
+    plugin: go
+    source: .
+    go-channel: stable

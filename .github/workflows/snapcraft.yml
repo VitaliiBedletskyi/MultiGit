@@ -1,0 +1,38 @@
+name: Build and Publish Snap for Multiple Architectures
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+
+      - name: Install Snapcraft and QEMU
+        run: |
+          sudo snap install snapcraft --classic
+          sudo snap install qemu-virgil  # Enables multi-arch builds
+
+      - name: Build Snap
+        run: snapcraft --use-lxd
+
+      - name: Authenticate with Snap Store
+        env:
+          SNAPCRAFT_LOGIN_FILE: ${{ secrets.SNAPCRAFT_LOGIN_FILE }}
+        run: |
+          echo "$SNAPCRAFT_LOGIN_FILE" > snap_login_file
+          snapcraft login --with snap_login_file
+
+      - name: Publish Snap
+        run: snapcraft push *.snap --release=stable

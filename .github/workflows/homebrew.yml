@@ -51,7 +51,9 @@ jobs:
           path: bin/
 
       - name: List files
-        run: ls -lah bin/
+        run: |
+          echo "Contents of mgit-darwin-amd64:"
+          ls -l bin/mgit-darwin-amd64/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

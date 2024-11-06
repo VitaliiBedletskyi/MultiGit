@@ -119,4 +119,3 @@ jobs:
           git add mgit.rb
           git commit -m "Update Homebrew formula for version $VERSION"
           git push https://x-access-token:${GH_PAT}@github.com/VitaliiBedletskyi/homebrew-tap.git HEAD:main
-          git push

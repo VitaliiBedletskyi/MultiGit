@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout MultiGit repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Clone Homebrew Tap Repository
         uses: actions/checkout@v4

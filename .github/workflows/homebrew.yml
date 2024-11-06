@@ -50,19 +50,14 @@ jobs:
         with:
           path: bin/
 
-      - name: List files
-        run: |
-          echo "Contents of mgit-darwin-amd64:"
-          ls -l bin/mgit-darwin-amd64/
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            bin/mgit-darwin-amd64
-            bin/mgit-linux-amd64
-            bin/mgit-darwin-arm64
-            bin/mgit-linux-arm64
+            bin/mgit-darwin-amd64/mgit-darwin-amd64
+            bin/mgit-linux-amd64/mgit-linux-amd64
+            bin/mgit-darwin-arm64/mgit-darwin-arm64
+            bin/mgit-linux-arm64/mgit-linux-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 

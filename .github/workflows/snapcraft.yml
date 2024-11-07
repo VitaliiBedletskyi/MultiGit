@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        arch: [ amd64, arm64, armhf ]
+        arch: [ amd64, arm64 ]
 
     steps:
       - name: Checkout code

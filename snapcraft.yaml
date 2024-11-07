@@ -1,4 +1,4 @@
-name: MultiGit
+name: mgit
 base: core22
 version: '0.0.1'
 summary: MultiGit - Effortless Git Repositories Management Tool
@@ -8,6 +8,7 @@ description: |
   Ideal for developers and teams managing multiple repositories, 
   MultiGit provides an intuitive way to handle various Git actions, 
   saving you time and reducing repetitive tasks.
+adopt-info: mgit
 
 confinement: strict
 
@@ -18,10 +19,15 @@ architectures:
 
 apps:
   mgit:
-    command: mgit
+    command: main
+    plugs:
+      - home
+      - network
 
 parts:
   mgit:
     plugin: go
     source: .
-    go-channel: stable
+    source-type: git
+    build-snaps: [go/latest/stable]
+

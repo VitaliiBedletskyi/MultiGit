@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        arch: [ amd64, arm64 ]
+        arch: [ amd64, arm64, armhf ]
 
     steps:
       - name: Checkout code
@@ -21,17 +21,39 @@ jobs:
       - name: Set up QEMU
         run: sudo apt-get install -y qemu-user-static # Enables multi-arch builds
 
+#      - name: Install Go
+#        run: |
+#          GO_VERSION=1.23.3
+#          wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
+#          sudo tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
+#          echo "export PATH=$PATH:/usr/local/go/bin" >> $GITHUB_ENV
+#
+#          - name: Set Go environment for architecture
+#            run: |
+#              echo "export GOOS=linux" >> $GITHUB_ENV
+#              if [ "${{ matrix.arch }}" == "amd64" ]; then
+#                echo "export GOARCH=amd64" >> $GITHUB_ENV
+#              elif [ "${{ matrix.arch }}" == "arm64" ]; then
+#                echo "export GOARCH=arm64" >> $GITHUB_ENV
+#              elif [ "${{ matrix.arch }}" == "armhf" ]; then
+#                echo "export GOARCH=arm" >> $GITHUB_ENV
+#              fi
       - name: Set up Snapcraft
         run: |
           sudo snap install snapcraft --classic
           sudo snap install multipass --classic
 
       - name: Build Snap
-        env:
-          SNAPCRAFT_BUILD_ENVIRONMENT: host
-        run: |
-          snapcraft clean
-          snapcraft --destructive-mode --target-arch=${{ matrix.arch }}
+        uses: diddlesnaps/snapcraft-multiarch-action@v1
+        with:
+          architecture: ${{ matrix.arch }}
+
+#      - name: Build Snap
+#        env:
+#          SNAPCRAFT_BUILD_ENVIRONMENT: host
+#        run: |
+#          snapcraft clean
+#          snapcraft --destructive-mode --target-arch=${{ matrix.arch }}
 
       - uses: actions/upload-artifact@v4
         with:

@@ -10,21 +10,31 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        arch: [ amd64, arm64, armhf ]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-#      - name: Install QEMU
-#        run: sudo snap install qemu-virgil  # Enables multi-arch builds
+      - name: Set up QEMU
+        run: sudo apt-get install -y qemu-user-static # Enables multi-arch builds
+
+      - name: Set up Snapcraft
+        run: sudo snap install snapcraft --classic
 
       - name: Build Snap
-        uses: snapcore/action-build@v1
-        id: snapcraft
+        env:
+          SNAPCRAFT_BUILD_ENVIRONMENT: host
+        run: |
+          snapcraft clean
+          snapcraft --use-lxd --target-arch=${{ matrix.arch }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: snap
-          path: ${{ steps.snapcraft.outputs.snap }}
+          name: mgit-${{ matrix.arch }}
+          path: mgit_*.snap
 
 #      - name: Authenticate with Snap Store
 #        env:

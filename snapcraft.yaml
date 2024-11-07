@@ -27,7 +27,6 @@ parts:
     plugin: go
     source: .
     source-type: git
-    build-snaps: [go/latest/stable]
     override-build: |
       snapcraftctl build
       mv "$SNAPCRAFT_PART_INSTALL/bin/MultiGit" "$SNAPCRAFT_PART_INSTALL/bin/mgit"

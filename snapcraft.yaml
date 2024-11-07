@@ -18,9 +18,6 @@ architectures:
 apps:
   mgit:
     command: bin/mgit
-    plugs:
-      - home
-      - network
 
 parts:
   mgit:

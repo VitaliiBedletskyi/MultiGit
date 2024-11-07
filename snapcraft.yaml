@@ -10,7 +10,7 @@ description: |
   saving you time and reducing repetitive tasks.
 adopt-info: mgit
 
-confinement: classic
+confinement: strict
 
 architectures:
   - build-on: amd64

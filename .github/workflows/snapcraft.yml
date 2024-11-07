@@ -62,7 +62,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mgit-${{ matrix.arch }}
           path: mgit_*.snap
 
 #      - name: Authenticate with Snap Store

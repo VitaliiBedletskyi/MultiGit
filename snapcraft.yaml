@@ -14,7 +14,6 @@ confinement: strict
 
 architectures:
   - build-on: amd64
-    build-for: all
 
 apps:
   mgit:

@@ -23,46 +23,33 @@ jobs:
         with:
           go-version: '1.23.2'
 
-      - name: Set up QEMU
-        run: sudo apt-get install -y qemu-user-static # Enables multi-arch builds
-
-#      - name: Install Go
-#        run: |
-#          GO_VERSION=1.23.3
-#          wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
-#          sudo tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
-#          echo "export PATH=$PATH:/usr/local/go/bin" >> $GITHUB_ENV
-#
-#          - name: Set Go environment for architecture
-#            run: |
-#              echo "export GOOS=linux" >> $GITHUB_ENV
-#              if [ "${{ matrix.arch }}" == "amd64" ]; then
-#                echo "export GOARCH=amd64" >> $GITHUB_ENV
-#              elif [ "${{ matrix.arch }}" == "arm64" ]; then
-#                echo "export GOARCH=arm64" >> $GITHUB_ENV
-#              elif [ "${{ matrix.arch }}" == "armhf" ]; then
-#                echo "export GOARCH=arm" >> $GITHUB_ENV
-#              fi
       - name: Set up Snapcraft
         run: |
           sudo snap install snapcraft --classic
           sudo snap install multipass --classic
 
-#      - name: Build Snap
-#        uses: diddlesnaps/snapcraft-multiarch-action@v1
-#        with:
-#          architecture: ${{ matrix.arch }}
-
       - name: Build Snap
+        id: build
         env:
           SNAPCRAFT_BUILD_ENVIRONMENT: host
         run: |
           snapcraft clean
           snapcraft --destructive-mode
 
-      - uses: actions/upload-artifact@v4
+      - name: Publish Snap
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_LOGIN }}
         with:
-          path: mgit_*.snap
+          snap: ${{ steps.build.outputs.snap }}
+          release: stable
+
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: mgit_amd64
+#          path: mgit_*.snap
+
+
 
 #      - name: Authenticate with Snap Store
 #        env:

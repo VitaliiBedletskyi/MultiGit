@@ -35,6 +35,9 @@ jobs:
         run: |
           snapcraft clean
           snapcraft --destructive-mode
+          echo "SNAP_NAME=$(ls *.snap)" >> $GITHUB_OUTPUT
+        outputs:
+          snap: ${{ SNAP_NAME }}
 
       - name: Publish Snap
         uses: snapcore/action-publish@v1

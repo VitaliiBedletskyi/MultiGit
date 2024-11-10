@@ -29,22 +29,21 @@ jobs:
           sudo snap install multipass --classic
 
       - name: Build Snap
-        id: build
         env:
           SNAPCRAFT_BUILD_ENVIRONMENT: host
         run: |
           snapcraft clean
           snapcraft --destructive-mode
-          echo "SNAP_NAME=$(ls *.snap)" >> $GITHUB_OUTPUT
-        outputs:
-          snap: ${{ SNAP_NAME }}
+
+      - name: Set snap name
+        run: echo "SNAP_NAME=$(ls *.snap)" >> GITHUB_ENV
 
       - name: Publish Snap
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_LOGIN }}
         with:
-          snap: ${{ steps.build.outputs.snap }}
+          snap: ${{ env.SNAP_NAME }}
           release: stable
 
 #      - uses: actions/upload-artifact@v4

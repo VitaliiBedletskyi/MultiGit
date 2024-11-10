@@ -36,7 +36,7 @@ jobs:
           snapcraft --destructive-mode
 
       - name: Set snap name
-        run: echo "SNAP_NAME=$(ls *.snap)" >> GITHUB_ENV
+        run: echo "SNAP_NAME=$(ls *.snap)" >> $GITHUB_ENV
 
       - name: Publish Snap
         uses: snapcore/action-publish@v1
